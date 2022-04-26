@@ -1,15 +1,25 @@
-import express from "express";
-import mongoose from "mongoose";
-import reviewRouter from "./routes/reviewRouter.js";
+const express = require("express");
+const InitiateMongoServer = require("./config/db");
+const main = require("./routes/main.js");
+const user = require("./routes/user.js");
+const courses = require("./routes/courses.js");
+const dotenv = require("dotenv");
 
-mongoose.connect("mongodb://localhost:27127/app_name");
-const port = 3000;
-const db = mongoose.connection;
+InitiateMongoServer();
+dotenv.config();
 const app = express();
-db.on("open", () => console.log("Connected to Mongo."));
+const PORT = process.env.PORT || 4000;
 
-// probably a line for user auth middleware
 app.use(express.json());
-app.use("/api/", mainRouter);
-app.use("/api/review", reviewRouter);
-app.listen(port, () => console.log(`Server running on port ${port}.`));
+
+app.get("/", (req, res) => {
+    res.json({ message: "API works" });
+});
+
+app.use("/", main);
+app.use("/user", user);
+app.use("/courses", courses);
+
+app.listen(PORT, () => {
+    console.log(`Server Started at PORT ${PORT}`);
+});

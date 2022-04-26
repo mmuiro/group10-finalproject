@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const UserSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -12,21 +12,23 @@ const UserSchema = mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
+        uniqueCaseInsensitive: true,
     },
-    reviews: [
+    scoreCards: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Review",
-        },
-    ],
-    universities: [
-        // list of universities the user has saved to their profile
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "University",
+            ref: "ScoreCard",
         },
     ],
 });
 
-export default mongoose.model("User", UserSchema);
+userSchema.virtual("gamesPlayed").get(function () {
+    return this.scoreCards.length;
+});
+
+userSchema.virtual("averageScore").get(function () {
+    let scores = this.scoreCards.map((card) => card.totalScore);
+    return scores.reduce((a, b) => a + b) / this.scoreCards.length;
+});
+
+export default mongoose.model("User", userSchema);
