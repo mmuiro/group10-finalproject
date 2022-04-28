@@ -202,7 +202,7 @@ router.get("/viewCourse/:id", auth, async (req, res) => {
             message: "Retrieved score cards for this course.",
             courseName: course.name,
             parScorePerHole: course.parScorePerHole,
-            courseScorePerHoles: scoreCards.map((card) => ({
+            scoreCards: scoreCards.map((card) => ({
                 date: card.date,
                 scorePerHole: card.scorePerHole,
                 totalScore: card.totalScore,
