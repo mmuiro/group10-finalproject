@@ -1,5 +1,7 @@
-import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+const jwt = require("jsonwebtoken");
+const User = require("../models/User.js");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const auth = async (req, res, next) => {
@@ -12,8 +14,8 @@ const auth = async (req, res, next) => {
         next();
     } catch (e) {
         console.log(e);
-        return res.status(500).json({ msg: "Server Error" });
+        return res.status(400).json({ msg: "Invalid token!" });
     }
 };
 
-export { auth, JWT_SECRET };
+module.exports = { auth, JWT_SECRET };

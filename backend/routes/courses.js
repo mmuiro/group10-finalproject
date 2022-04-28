@@ -1,7 +1,7 @@
 const express = require("express");
 const ScoreCard = require("../models/ScoreCard.js");
 const Course = require("../models/Course.js");
-const auth = require("../middleware/auth.js");
+const { auth } = require("../middleware/auth.js");
 const router = express.Router();
 
 router.get("/view", async (req, res) => {
@@ -32,7 +32,7 @@ router.get("/view", async (req, res) => {
 });
 
 router.get("/list", async (req, res) => {
-    // gets a list of all courses. Needed for adding scoreCards, at the course selection.
+    // gets a list of all courses. Needed for adding scoreCards, at the course selection part.
     try {
         const courses = await Course.find();
         return res.status(200).json({
@@ -80,4 +80,4 @@ router.post("/new", auth, async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;

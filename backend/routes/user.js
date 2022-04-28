@@ -2,11 +2,11 @@ const express = require("express");
 const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const auth = require("../middleware/auth");
+const { auth } = require("../middleware/auth");
 
 const User = require("../models/User");
-const { default: ScoreCard } = require("../models/ScoreCard");
-const { default: Course } = require("../models/Course");
+const ScoreCard = require("../models/ScoreCard.js");
+const Course = require("../models/Course.js");
 
 const router = express.Router();
 
@@ -130,18 +130,26 @@ router.post(
 
 router.post("/addScoreCard", auth, async (req, res) => {
     let { courseID, date, scorePerHole } = req.body; // date should be sent using Date.toJSON()
-    date = Date(date);
+    date = new Date(date);
     const user = req.user;
-    if (typeof courseID !== "string" || !Array.isArray(scorePerHole))
+    if (
+        typeof courseID !== "string" ||
+        !Array.isArray(scorePerHole) ||
+        isNaN(date)
+    )
         return res
             .status(400)
             .json({ success: false, message: "Invalid Parameters." });
     try {
-        const course = await Course.findById(id);
+        const course = await Course.findById(courseID);
         if (!course)
             return res
                 .status(400)
                 .json({ success: false, message: "No course with that ID." });
+        if (scorePerHole.length !== course.numHoles)
+            return res
+                .status(400)
+                .json({ success: false, message: "Invalid Parameters." });
         const scoreCard = new ScoreCard({
             course,
             date,
@@ -151,7 +159,7 @@ router.post("/addScoreCard", auth, async (req, res) => {
         await scoreCard.save();
         await user.save();
         return res.status(200).json({
-            success: false,
+            success: true,
             message: "Added ScoreCard successfully.",
         });
     } catch (e) {
@@ -209,9 +217,10 @@ router.get("/viewCourse/:id", auth, async (req, res) => {
 });
 
 router.get("/home", auth, async (req, res) => {
+    // returns a list of the user's scorecards. Unlike the main landing page, this doesn't sort + limit the results.
     const user = req.user;
     try {
-        User.populate(user, {
+        await User.populate(user, {
             path: "scoreCards",
             populate: {
                 path: "course",
@@ -236,4 +245,4 @@ router.get("/home", auth, async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;

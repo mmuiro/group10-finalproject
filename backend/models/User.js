@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
     username: {
@@ -31,4 +31,4 @@ userSchema.virtual("averageScore").get(function () {
     return scores.reduce((a, b) => a + b) / this.scoreCards.length;
 });
 
-export default mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);

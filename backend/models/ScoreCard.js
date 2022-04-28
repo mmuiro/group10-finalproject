@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const scoreCardSchema = mongoose.Schema({
     course: {
@@ -21,4 +21,4 @@ scoreCardSchema.virtual("totalScore").get(function () {
     return this.scorePerHole.reduce((a, b) => a + b);
 });
 
-export default mongoose.model("ScoreCard", scoreCardSchema);
+module.exports = mongoose.model("ScoreCard", scoreCardSchema);

@@ -5,9 +5,9 @@ const ScoreCard = require("../models/ScoreCard.js");
 router.get("/landing", async (req, res) => {
     // retrieves a list of the best 10 score cards, sorted by ascending score (best to worst).
     try {
-        const bestScoreCards = await ScoreCard.find()
-            .sort({ totalScore: "asc" })
-            .limit(10); // gets the 10 scoreCards with the lowest score
+        let bestScoreCards = await ScoreCard.find();
+        bestScoreCards.sort((a, b) => a.totalScore - b.totalScore);
+        bestScoreCards = bestScoreCards.slice(0, 10); // somewhat inefficient, but we can't sort by virtuals
         return res.status(200).json({
             success: true,
             message: "Retrieved landing page info.",
@@ -21,4 +21,4 @@ router.get("/landing", async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;

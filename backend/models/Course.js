@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const courseSchema = mongoose.Schema({
     name: {
@@ -16,4 +16,4 @@ courseSchema.virtual("numHoles").get(function () {
     return this.parScorePerHole.length;
 });
 
-export default mongoose.model("Course", courseSchema);
+module.exports = mongoose.model("Course", courseSchema);

@@ -11,14 +11,15 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.json({ message: "API works" });
 });
 
-app.use("/", main);
-app.use("/user", user);
-app.use("/courses", courses);
+app.use("/api/", main);
+app.use("/api/user", user);
+app.use("/api/courses", courses);
 
 app.listen(PORT, () => {
     console.log(`Server Started at PORT ${PORT}`);
