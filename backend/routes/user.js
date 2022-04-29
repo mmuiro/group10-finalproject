@@ -23,7 +23,7 @@ router.post(
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
-                errors: errors.array(),
+                message: errors.array(),
             });
         }
         const { username, password, email } = req.body;
@@ -57,6 +57,7 @@ router.post(
                 (err, token) => {
                     if (err) throw err;
                     res.status(200).json({
+                        success: true,
                         message: "Successfully Registered",
                         token,
                     });
@@ -81,7 +82,7 @@ router.post(
 
         if (!errors.isEmpty()) {
             return res.status(400).json({
-                errors: errors.array(),
+                message: errors.array(),
             });
         }
 
@@ -114,6 +115,7 @@ router.post(
                 (err, token) => {
                     if (err) throw err;
                     res.status(200).json({
+                        success: true,
                         message: "Successfully Signed In",
                         token,
                     });
@@ -129,11 +131,11 @@ router.post(
 );
 
 router.post("/addScoreCard", auth, async (req, res) => {
-    let { courseID, date, scorePerHole } = req.body; // date should be sent using Date.toJSON()
+    let { courseName, date, scorePerHole } = req.body; // date should be sent using Date.toJSON()
     date = new Date(date);
     const user = req.user;
     if (
-        typeof courseID !== "string" ||
+        typeof courseName !== "string" ||
         !Array.isArray(scorePerHole) ||
         isNaN(date)
     )
@@ -141,11 +143,11 @@ router.post("/addScoreCard", auth, async (req, res) => {
             .status(400)
             .json({ success: false, message: "Invalid Parameters." });
     try {
-        const course = await Course.findById(courseID);
+        const course = await Course.findOne({ name: courseName });
         if (!course)
             return res
                 .status(400)
-                .json({ success: false, message: "No course with that ID." });
+                .json({ success: false, message: "No course with that name." });
         if (scorePerHole.length !== course.numHoles)
             return res
                 .status(400)

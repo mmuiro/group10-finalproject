@@ -1,5 +1,5 @@
 import ScoreCardCarousel from "../components/ScoreCardCarousel";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import authFetch from "../utils/authFetch";
 
@@ -21,7 +21,15 @@ const LandingPage = () => {
     }, [loading]);
     return (
         !loading && (
-            <Flex justifyContent={"center"} p={16}>
+            <Flex
+                justifyContent={"center"}
+                alignItems="center"
+                p={16}
+                direction="column"
+            >
+                <Text fontWeight="medium" fontSize="xl" color="green.500">
+                    Best Scores of All Time
+                </Text>
                 <ScoreCardCarousel scoreCards={displayCards} />
             </Flex>
         )

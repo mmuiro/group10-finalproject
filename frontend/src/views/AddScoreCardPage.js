@@ -14,35 +14,21 @@ import {
 } from "@chakra-ui/react";
 import authFetch from "../utils/authFetch.js";
 
-const LoginPage = () => {
+const AddScoreCardPage = () => {
     const navigate = useNavigate();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [serverMsg, setServerMsg] = useState("");
+    const [courseName, setCourseName] = useState("");
+    const [allCourses, setAllCourses] = useState([]);
+    const [date, setDate] = useState("");
+    const [scorePerHole, setScorePerHole] = useState("");
 
     useEffect(() => {
         checkAuth().then((res) => {
-            if (res) navigate("/home");
+            if (!res) navigate("/login");
         });
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await authFetch(
-            "http://localhost:3001/api/user/login",
-            "post",
-            {
-                username,
-                password,
-            }
-        );
-        const json = res.data;
-        if (json.success) {
-            localStorage.token = json.token;
-            navigate("/home");
-        } else {
-            setServerMsg(json.message);
-        }
     };
 
     return (
@@ -59,25 +45,16 @@ const LoginPage = () => {
                 <FormControl display="flex" w="fit-content">
                     <VStack w={60} spacing={1}>
                         <Text fontWeight="medium" fontSize="xl">
-                            Login
+                            Add a score card
                         </Text>
-                        <FormLabel alignSelf="start">Username</FormLabel>
+                        <FormLabel alignSelf="start">Course Name</FormLabel>
                         <Input
                             type="text"
-                            placeholder="Username"
-                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Course name"
+                            onChange={(e) => setCourseName(e.target.value)}
                         ></Input>
-                        <FormLabel alignSelf="start">Password</FormLabel>
-                        <Input
-                            type="password"
-                            placeholder="Password"
-                            onChange={(e) => setPassword(e.target.value)}
-                        ></Input>
-                        {serverMsg !== "" && (
-                            <Text fontWeight="medium" color="red.300">
-                                {serverMsg}
-                            </Text>
-                        )}
+                        <FormLabel alignSelf="start">Date</FormLabel>
+                        <input type="date" />
                         <Divider />
                         <Button colorScheme="green" onClick={handleSubmit}>
                             Submit
@@ -89,4 +66,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default AddScoreCardPage;
