@@ -4,6 +4,9 @@ import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MyCourseStatsPage from "./views/MyCourseStatsPage";
+import LandingPage from "./views/LandingPage";
+import UserHomePage from "./views/UserHomePage";
+import LoginPage from "./views/LoginPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -11,11 +14,13 @@ root.render(
         <React.StrictMode>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<MyCourseStatsPage />} />
+                    <Route path="/" element={<LandingPage />} />
                     <Route
                         path="/user/viewCourse/:id"
                         element={<MyCourseStatsPage />}
                     />
+                    <Route path="/home" element={<UserHomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
                 </Routes>
             </BrowserRouter>
         </React.StrictMode>

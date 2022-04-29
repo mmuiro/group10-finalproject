@@ -235,6 +235,7 @@ router.get("/home", auth, async (req, res) => {
         }));
         return res.status(200).json({
             success: true,
+            message: "Retrieved user's score cards.",
             scoreCards,
         });
     } catch (e) {
@@ -243,6 +244,13 @@ router.get("/home", auth, async (req, res) => {
             message: "Server Error",
         });
     }
+});
+
+router.get("/checkAuth", auth, async (req, res) => {
+    // auth middleware handles the fail case
+    return res
+        .status(200)
+        .json({ success: true, message: "You are logged in." });
 });
 
 module.exports = router;
